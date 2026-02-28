@@ -1,0 +1,25 @@
+{
+  "name": "vj-mapper",
+  "version": "0.1.0",
+  "description": "Spatial projection mapping with live segmentation and ISF shaders",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "vj",
+    "projection-mapping",
+    "segmentation",
+    "isf",
+    "shaders"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^7.3.1"
+  },
+  "dependencies": {
+    "onnxruntime-web": "^1.24.2"
+  }
+}

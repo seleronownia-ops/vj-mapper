@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VJ Mapper</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Top bar -->
+    <header id="topbar">
+      <h1>VJ Mapper</h1>
+      <div id="stats">
+        <span id="fps-display">-- fps</span>
+        <span id="seg-status">seg: idle</span>
+      </div>
+      <div id="topbar-actions">
+        <button id="btn-fullscreen" title="Fullscreen output">⛶ Output</button>
+      </div>
+    </header>
+
+    <!-- Main layout -->
+    <div id="workspace">
+      <!-- Left: source + overlay -->
+      <div id="viewport">
+        <canvas id="canvas-source" width="1280" height="720"></canvas>
+        <canvas id="canvas-overlay" width="1280" height="720"></canvas>
+        <canvas id="canvas-output" width="1280" height="720"></canvas>
+        <div id="viewport-controls">
+          <button id="btn-camera" class="active">📷 Camera</button>
+          <button id="btn-image">🖼 Image</button>
+          <label id="toggle-overlay">
+            <input type="checkbox" id="chk-overlay" checked /> Segments
+          </label>
+          <label id="toggle-shaders">
+            <input type="checkbox" id="chk-shaders" checked /> Shaders
+          </label>
+        </div>
+      </div>
+
+      <!-- Right: controls panel -->
+      <aside id="panel">
+        <section id="panel-segments">
+          <h2>Segments</h2>
+          <div id="segment-list">
+            <p class="placeholder">Run segmentation to detect regions</p>
+          </div>
+          <button id="btn-segment" class="primary">▶ Segment</button>
+        </section>
+
+        <section id="panel-shaders">
+          <h2>Shaders</h2>
+          <div id="shader-list"></div>
+        </section>
+
+        <section id="panel-mapping">
+          <h2>Mapping</h2>
+          <div id="mapping-list">
+            <p class="placeholder">Assign shaders to segments above</p>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <!-- Model loading modal -->
+    <div id="modal-model" class="modal hidden">
+      <div class="modal-content">
+        <h2>🧠 Model Required</h2>
+        <p>Place <code>yolo26n-seg.onnx</code> in the <code>public/models/</code> folder.</p>
+        <p>Generate it with:</p>
+        <pre><code>pip install ultralytics
+python scripts/export-model.py</code></pre>
+        <p>Or drag & drop the .onnx file here:</p>
+        <div id="model-dropzone">Drop .onnx file here</div>
+        <button id="btn-close-modal">Close</button>
+      </div>
+    </div>
+
+    <!-- Hidden file input -->
+    <input type="file" id="file-image" accept="image/*" class="hidden" />
+    <input type="file" id="file-model" accept=".onnx" class="hidden" />
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
