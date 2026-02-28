@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VJ Mapper</title>
-  <script type="module" crossorigin src="/vj-mapper/assets/index-Dj22DZI2.js"></script>
-  <link rel="stylesheet" crossorigin href="/vj-mapper/assets/index-CShLc21K.css">
+  <script type="module" crossorigin src="/vj-mapper/assets/index-vUXnzaoK.js"></script>
+  <link rel="stylesheet" crossorigin href="/vj-mapper/assets/index-BA0vneLc.css">
 </head>
 <body>
   <div id="app">
@@ -30,7 +30,7 @@
         <canvas id="canvas-output" width="1280" height="720"></canvas>
         <div id="viewport-controls">
           <button id="btn-camera" class="active">📷 Camera</button>
-          <button id="btn-image">🖼 Image</button>
+          <label id="btn-image" for="file-image" role="button">🖼 Image</label>
           <label id="toggle-overlay">
             <input type="checkbox" id="chk-overlay" checked /> Segments
           </label>
@@ -84,8 +84,8 @@ python scripts/export-model.py</code></pre>
     <!-- Error banner -->
     <div id="error-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#c00;color:#fff;padding:8px 16px;font-family:monospace;font-size:12px;z-index:999;"></div>
 
-    <!-- Hidden file input -->
-    <input type="file" id="file-image" accept="image/*" class="hidden" />
+    <!-- Hidden file input — must NOT be inside a form, label association handles trigger -->
+    <input type="file" id="file-image" accept="image/*" capture="environment" class="hidden" />
     <input type="file" id="file-model" accept=".onnx" class="hidden" />
   </div>
 
