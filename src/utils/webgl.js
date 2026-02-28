@@ -134,12 +134,12 @@ export function createFramebuffer(gl, width, height) {
   return { framebuffer: fb, texture };
 }
 
-/** Standard fullscreen vertex shader */
+/** Standard fullscreen vertex shader (flips Y for correct orientation) */
 export const FULLSCREEN_VERT = `#version 300 es
 in vec2 a_position;
 in vec2 a_texcoord;
 out vec2 v_uv;
 void main() {
-  v_uv = a_texcoord;
+  v_uv = vec2(a_texcoord.x, 1.0 - a_texcoord.y);
   gl_Position = vec4(a_position, 0.0, 1.0);
 }`;
