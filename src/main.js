@@ -31,6 +31,10 @@ const modalModel = document.getElementById('modal-model');
 const btnCloseModal = document.getElementById('btn-close-modal');
 const modelDropzone = document.getElementById('model-dropzone');
 
+// Model URL (Ultralytics official ONNX release)
+const MODEL_URL = 'https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26n-seg.onnx';
+const MODEL_LOCAL = import.meta.env.BASE_URL + 'models/yolo26n-seg.onnx';
+
 // ─── State ───
 let pipeline = null;
 let compositor = null;
@@ -65,16 +69,8 @@ async function init() {
   // Render shader list in UI
   renderShaderList(shaderListEl, pipeline.getShaderList());
 
-  // Try to load model
-  try {
-    updateSegStatus(segStatus, 'loading model...');
-    await initSegmentation('/models/yolo26n-seg.onnx');
-    updateSegStatus(segStatus, 'ready');
-  } catch (err) {
-    console.warn('[vjm] Model not found, showing instructions:', err.message);
-    updateSegStatus(segStatus, 'no model');
-    modalModel.classList.remove('hidden');
-  }
+  // Load model — try local first, then auto-download
+  await loadModel();
 
   // Start camera by default
   try {
@@ -157,6 +153,61 @@ function renderLoop() {
   }
 
   requestAnimationFrame(renderLoop);
+}
+
+// ─── Model Loading ───
+async function loadModel() {
+  updateSegStatus(segStatus, 'loading model...');
+
+  // Try local file first
+  try {
+    const resp = await fetch(MODEL_LOCAL, { method: 'HEAD' });
+    if (resp.ok) {
+      await initSegmentation(MODEL_LOCAL);
+      updateSegStatus(segStatus, 'ready');
+      return;
+    }
+  } catch (_) {}
+
+  // Auto-download from GitHub
+  console.log('[vjm] Local model not found, downloading from GitHub...');
+  updateSegStatus(segStatus, 'downloading model...');
+
+  try {
+    const resp = await fetch(MODEL_URL);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
+    const total = parseInt(resp.headers.get('content-length') || '0');
+    const reader = resp.body.getReader();
+    const chunks = [];
+    let received = 0;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+      received += value.length;
+      if (total > 0) {
+        const pct = Math.round((received / total) * 100);
+        updateSegStatus(segStatus, `downloading ${pct}%`);
+      }
+    }
+
+    const buffer = new Uint8Array(received);
+    let offset = 0;
+    for (const chunk of chunks) {
+      buffer.set(chunk, offset);
+      offset += chunk.length;
+    }
+
+    await initSegmentation(buffer.buffer);
+    updateSegStatus(segStatus, 'ready');
+    console.log(`[vjm] Model loaded (${(received / 1024 / 1024).toFixed(1)} MB)`);
+  } catch (err) {
+    console.warn('[vjm] Auto-download failed:', err.message);
+    updateSegStatus(segStatus, 'no model');
+    modalModel.classList.remove('hidden');
+  }
 }
 
 // ─── Segmentation ───

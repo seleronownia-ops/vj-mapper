@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   root: '.',
   publicDir: 'public',
+  base: '/vj-mapper/',
   build: {
     outDir: 'dist',
     target: 'esnext',
