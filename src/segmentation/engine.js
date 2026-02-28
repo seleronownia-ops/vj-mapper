@@ -24,11 +24,12 @@ const MODEL_SIZE = 640;
 export async function initSegmentation(modelSource, opts = {}) {
   const { backend = 'webgl' } = opts;
 
-  // Configure ONNX Runtime
-  ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/';
+  // Configure ONNX Runtime — use CDN for WASM files
+  ort.env.wasm.numThreads = 1; // Avoid SharedArrayBuffer issues on GH Pages
+  ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.24.2/dist/';
 
   const sessionOpts = {
-    executionProviders: [backend, 'wasm'], // fallback chain
+    executionProviders: ['wasm'], // WASM is most reliable cross-platform
     graphOptimizationLevel: 'all',
   };
 

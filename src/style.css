@@ -112,6 +112,30 @@ body {
   flex-direction: column;
 }
 
+/* Mobile: panel slides from bottom */
+@media (max-width: 768px) {
+  #workspace { flex-direction: column; }
+
+  #panel {
+    width: 100%;
+    max-height: 35vh;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-x: auto;
+  }
+
+  #panel section {
+    min-width: 200px;
+    flex: 1;
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+  }
+
+  #viewport { min-height: 50vh; }
+}
+
 #panel section {
   padding: 12px;
   border-bottom: 1px solid var(--border);

@@ -158,10 +158,16 @@ function renderLoop() {
 async function loadModel() {
   updateSegStatus(segStatus, 'loading model...');
   try {
-    await initSegmentation(MODEL_LOCAL);
+    // Fetch as ArrayBuffer for reliable cross-origin loading
+    console.log('[vjm] Fetching model from:', MODEL_LOCAL);
+    const resp = await fetch(MODEL_LOCAL);
+    if (!resp.ok) throw new Error(`Model fetch failed: HTTP ${resp.status}`);
+    const buffer = await resp.arrayBuffer();
+    console.log(`[vjm] Model downloaded: ${(buffer.byteLength / 1024 / 1024).toFixed(1)} MB`);
+    await initSegmentation(buffer);
     updateSegStatus(segStatus, 'ready');
   } catch (err) {
-    console.warn('[vjm] Model load failed:', err.message);
+    console.error('[vjm] Model load failed:', err);
     updateSegStatus(segStatus, 'no model');
     modalModel.classList.remove('hidden');
   }
