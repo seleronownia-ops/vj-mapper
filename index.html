@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VJ Mapper</title>
-  <script type="module" crossorigin src="/vj-mapper/assets/index-BWIA6jAc.js"></script>
+  <script type="module" crossorigin src="/vj-mapper/assets/index-Dj22DZI2.js"></script>
   <link rel="stylesheet" crossorigin href="/vj-mapper/assets/index-CShLc21K.css">
 </head>
 <body>
@@ -81,10 +81,26 @@ python scripts/export-model.py</code></pre>
       </div>
     </div>
 
+    <!-- Error banner -->
+    <div id="error-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#c00;color:#fff;padding:8px 16px;font-family:monospace;font-size:12px;z-index:999;"></div>
+
     <!-- Hidden file input -->
     <input type="file" id="file-image" accept="image/*" class="hidden" />
     <input type="file" id="file-model" accept=".onnx" class="hidden" />
   </div>
 
+  <script>
+    // Catch unhandled errors — show banner instead of blank page
+    window.addEventListener('unhandledrejection', e => {
+      console.error('[vjm] Unhandled rejection:', e.reason);
+      const banner = document.getElementById('error-banner');
+      if (banner) { banner.textContent = '⚠️ ' + (e.reason?.message || e.reason); banner.style.display = 'block'; }
+      e.preventDefault();
+    });
+    window.addEventListener('error', e => {
+      const banner = document.getElementById('error-banner');
+      if (banner) { banner.textContent = '⚠️ ' + e.message; banner.style.display = 'block'; }
+    });
+  </script>
 </body>
 </html>
