@@ -84,8 +84,8 @@ body {
 }
 
 #canvas-source { z-index: 1; }
-#canvas-overlay { z-index: 2; pointer-events: none; }
-#canvas-output { z-index: 3; pointer-events: none; }
+#canvas-output { z-index: 2; pointer-events: none; }
+#canvas-overlay { z-index: 3; pointer-events: none; }
 
 #viewport-controls {
   position: absolute;

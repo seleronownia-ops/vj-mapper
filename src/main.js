@@ -26,13 +26,14 @@ const btnSegment = document.getElementById('btn-segment');
 const btnFullscreen = document.getElementById('btn-fullscreen');
 const chkOverlay = document.getElementById('chk-overlay');
 const chkShaders = document.getElementById('chk-shaders');
+const chkFlip = document.getElementById('chk-flip');
 const fileImage = document.getElementById('file-image');
 const modalModel = document.getElementById('modal-model');
 const btnCloseModal = document.getElementById('btn-close-modal');
 const modelDropzone = document.getElementById('model-dropzone');
 
 // Model URL (Ultralytics official ONNX release)
-const MODEL_LOCAL = import.meta.env.BASE_URL + 'models/yolo11n-seg.onnx';
+const MODEL_LOCAL = import.meta.env.BASE_URL + 'models/yolo26n-seg.onnx';
 
 // ─── State ───
 let pipeline = null;
@@ -101,7 +102,7 @@ function renderLoop() {
 
   // Draw camera frame to source canvas
   if (isCameraActive()) {
-    drawVideoFrame(canvasSource);
+    drawVideoFrame(canvasSource, { rotate180: chkFlip.checked });
   }
 
   // Run segmentation periodically in live mode

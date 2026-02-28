@@ -70,10 +70,19 @@ export function stopCamera() {
  * @param {HTMLCanvasElement} canvas
  * @returns {boolean} true if a frame was drawn
  */
-export function drawVideoFrame(canvas) {
+export function drawVideoFrame(canvas, opts = {}) {
   if (!videoEl || videoEl.readyState < 2) return false;
+  const { rotate180 = false } = opts;
   const ctx = canvas.getContext('2d');
-  ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+  if (rotate180) {
+    ctx.save();
+    ctx.translate(canvas.width, canvas.height);
+    ctx.rotate(Math.PI);
+    ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
+  } else {
+    ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+  }
   return true;
 }
 
